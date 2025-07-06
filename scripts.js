@@ -73,64 +73,78 @@ if (task1Status !== "done" && task2Status !== "done") {
   console.log("No tasks completed, let's get to work!");
 }
 
-// Initialize the task array with some existing tasks
-let tasks = [
-  { id: 1, title: "launch career", description: "lanch epic career,conquer react,understand databases", status: "todo" },
-  { id: 2, title: "launch career", description: "explore ES6 feature,have fun", status: "done" }
+// Initial tasks array 
+const tasks = [
+  { id: 1, title: "understanding databases", description: "learn databases everyday", status: "todo" },
+  { id: 2, title: "have", description: "do fun activities with friends", status: "done" },
+  // …other existing tasks
 ];
 
-// Function to add a new task
-function addTask() {
-  if (tasks.length >= 5) {
+// Function to prompt and validate a string input
+function promptForString(message) {
+  let input;
+  do {
+    input = prompt(message)?.trim();
+    if (!input) alert("This field cannot be empty. Please try again.");
+  } while (!input);
+  return input;
+}
+
+// Function to prompt and validate status (must be "todo" or "done")
+function promptForStatus(message) {
+  let status;
+  do {
+    status = prompt(message)?.trim().toLowerCase();
+    if (status !== "todo" && status !== "done") {
+      alert("Status must be either 'todo' or 'done'. Please try again.");
+      status = null;
+    }
+  } while (!status);
+  return status;
+}
+
+// Main loop: up to 3 new tasks
+for (let i = 0; i < 3; i++) {
+  const limitReached = tasks.length >= 3 + (tasks.length - i); 
+  // note: tasks always grow; this check is mainly illustrative
+  if (tasks.length >= 3 + (tasks.length - i)) {
     alert("There are enough tasks on your board, please check them in the console.");
-    return;
+    break;
   }
 
-  // Prompt user for task details
-  const title = prompt("Enter task title:");
-  const description = prompt("Enter task description:");
-  const status = prompt("Enter task status (e.g., 'pending' or 'done'):");
+  const addMore = confirm(
+    `You can add ${3 - i} more task(s). Do you want to add a new task?`
+  );
+  if (!addMore) break;
 
-  // Determine the new task ID
-  const newId = tasks.length > 0 ? tasks[tasks.length - 1].id + 1 : 1;
+  const title = promptForString("Enter task title:get  an internship");
+  const description = promptForString("Enter task description:approach companies for learning more tech skills");
+  const status = promptForStatus("Enter task status ('todo' or 'done'):todo");
 
-  // Create the new task object
+  const lastId = tasks.length ? tasks[tasks.length - 1].id : 0;
   const newTask = {
-    id: newId,
-    title: title,
-    description: description,
-    status: status.toLowerCase()
+    id: lastId + 1,
+    title,
+    description,
+    status,
   };
-
-  // Add the new task to the array
   tasks.push(newTask);
 }
 
-// Function to display all tasks
-function displayAllTasks() {
-  console.log("All Tasks:");
-  tasks.forEach(task => {
-    console.log(`ID: ${task.id}, Title: ${task.title}, Description: ${task.description}, Status: ${task.status}`);
-  });
-}
+// Log all tasks
+console.log("=== All Tasks ===");
+tasks.forEach((t) => {
+  console.log(
+    `ID: ${t.id} | Title: ${t.title} | Description: ${t.description} | Status: ${t.status}`
+  );
+});
 
-// Function to display only completed tasks
-function displayCompletedTasks() {
-  const completedTasks = tasks.filter(task => task.status === "done");
-  console.log("Completed Tasks:");
-  completedTasks.forEach(task => {
-    console.log(`ID: ${task.id}, Title: ${task.title}, Description: ${task.description}`);
-  });
-}
+// Filter and log completed tasks
+const doneTasks = tasks.filter((t) => t.status === "done");
+console.log("=== Completed Tasks ===");
+doneTasks.forEach((t) => {
+  console.log(
+    `ID: ${t.id} | Title: ${t.title} | Description: ${t.description}`
+  );
+});
 
-// Example usage:
-// Add up to three new tasks
-for (let i = 0; i < 3; i++) {
-  addTask();
-}
-
-// Display all tasks
-displayAllTasks();
-
-// Display only completed tasks
-displayCompletedTasks();
